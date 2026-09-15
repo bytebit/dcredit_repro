@@ -1,0 +1,12 @@
+{
+  "nodes": 124721,
+  "edges": 359929,
+  "b_val": 9372773,
+  "b_test": 10858279,
+  "labeled": {
+    "train": 7862,
+    "val": 2383,
+    "test": 6676
+  },
+  "edges_crossing_cutoff": 21775
+}
