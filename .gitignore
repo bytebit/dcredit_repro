@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+data/*
+!data/README.md
+*.pt
+*.npz
+*.pkl
+render_out/
+*.tiff
