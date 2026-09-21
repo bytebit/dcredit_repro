@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "dcredit_repro: Reproducible code and multi-seed statistics for adaptive gated fusion on-chain fraud detection"
+message: "If you use this code, please cite the archived release (DOI below)."
+type: software
+authors:
+  - family-names: Huang
+    given-names: Junfei
+    email: huangjunfei@bupt.edu.cn
+    orcid: "https://orcid.org/0000-0002-5557-5886"
+    affiliation: "School of Computer Science, Beijing University of Posts and Telecommunications, Beijing, China"
+version: v1.0.0
+date-released: 2026-09-21
+license: MIT
+doi: 10.5281/zenodo.22874573
+url: "https://github.com/bytebit/dcredit_repro"
+repository-code: "https://github.com/bytebit/dcredit_repro"
+keywords:
+  - fraud detection
+  - anti-money laundering
+  - label propagation
+  - gated fusion
+  - blockchain analytics
