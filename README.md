@@ -1,5 +1,9 @@
 # D-Credit: reproducible code for "Adaptive Gated Fusion of Credit Propagation and Behavior Features for On-Chain Fraud Detection"
 
+**Archived release:** v1.0.0 — https://doi.org/10.5281/zenodo.22874573
+(development version: https://github.com/bytebit/dcredit_repro). Cite the archived
+release when referring to this code.
+
 This repository reproduces every table and figure of the manuscript:
 
 - the four-regime structure analysis (laundering clusters, mixer, dispersed
