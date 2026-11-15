@@ -1,8 +1,7 @@
-# D-Credit: reproducible code for "Adaptive Gated Fusion of Credit Propagation and Behavior Features for On-Chain Fraud Detection"
+# Reproducible code for "When Credit Propagation Helps in On-Chain Fraud Detection: A Regime Analysis and Low-False-Positive Decision Rule"
 
-**Archived release:** v1.0.0 — https://doi.org/10.5281/zenodo.22874573
-(development version: https://github.com/bytebit/dcredit_repro). Cite the archived
-release when referring to this code.
+**Archived release:** v1.1.0 — https://doi.org/10.5281/zenodo.22874572
+(concept DOI covering all versions). Cite v1.1.0 for the corrected evaluation.
 
 This repository reproduces every table and figure of the manuscript:
 
@@ -58,21 +57,25 @@ python exp/preprocess_bert4eth.py     # CSV -> nodes.npz / edges.npz
 python exp/prep_protocol.py           # temporal split -> results/eth_protocol.npz
 ```
 
-Multi-seed evaluation of the ETH same-window regimes (Tables 4, 5 and 8 of the
-manuscript; one seed draw shared by every method inside a trial):
+Multi-seed evaluation of the ETH **transductive all-time** regimes (mixer Table 3,
+phishing Table 4, gated rule Table 6 of the manuscript; one seed draw shared by
+every method inside a trial; final metrics exclude both the training seeds and the
+validation nodes used to select the gate):
 
 ```bash
 python exp/multiseed_eval.py --label 2 --fractions 0.1,0.5 --trials 10   # mixer
 python exp/multiseed_eval.py --label 1 --fractions 0.1,0.5 --trials 10   # phishing
+python exp/sage_same_seed.py --label 2 --fractions 0.1,0.5 --trials 10 --epochs 200
+python exp/sage_same_seed.py --label 1 --fractions 0.1,0.5 --trials 10 --epochs 200
 ```
 
-Elliptic t=29 snapshot (Table 3, laundering clusters):
+Elliptic t=29 snapshot (Table 2, laundering clusters):
 
 ```bash
 python exp/elliptic_t29_multiseed.py --trials 10 --fractions 0.1,0.5
 ```
 
-Cross-time regime and full-label baselines (Tables 2 and 7):
+Cross-time regime and full-label baselines (Table 5 and §4.4):
 
 ```bash
 python exp/baselines_propagation.py        # LP / PPR / APPNP under the official split
@@ -91,6 +94,8 @@ Statistics (mean, SD, 95% CI over the 10 trials):
 
 ```bash
 python analysis/compute_ci.py              # -> analysis/statistics.md
+python analysis/paired_contrasts.py        # -> analysis/paired_contrasts.{md,json}
+python analysis/interpretability_audit.py  # -> analysis/interpretability_audit.{md,json}
 ```
 
 Figures:
@@ -111,10 +116,17 @@ python figures/fig3_gate_weight.py
   nodes. `multiseed_eval.py` records both the AUC-selected and the
   Recall@FPR=1%-selected `w`, so the gate-selection analysis (Section 5.3) can be
   checked directly.
-- **Evaluation windows.** The mixer regime follows the same-window protocol
-  (tornado and normal accounts of the constructed graph); the phishing regime is
-  evaluated inside the test window, with the gate still learned on the earlier
-  validation period.
+- **Strict evaluation isolation.** For every trial the evaluation mask excludes
+  both the training seeds and the validation nodes. Two assertions abort a run on
+  any overlap, and each output JSON stores an `evaluation_protocol` block with
+  `seed_nodes_used_for_scoring: 0` and `validation_nodes_used_for_scoring: 0`.
+- **Transductive Ethereum protocol.** Features and graph edges are built from the
+  complete 2017–2022 snapshot (blocks up to 14,297,730). The first-appearance split
+  only determines which labeled nodes are scored; it does not make the features
+  future-blind. The ETH results are therefore retrospective and transductive.
+- **Same-seed graph baseline.** `exp/sage_same_seed.py` trains GraphSAGE with the
+  identical seed draws, graph and validation-only early stopping, and the same
+  evaluation masks.
 - **Metrics.** AUC-ROC, average precision with the fraud class as positive, and
   Recall@FPR=1% (threshold chosen for a 1% false-positive rate).
 

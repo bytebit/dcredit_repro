@@ -1,0 +1,226 @@
+{
+  "0.1": {
+    "lp": {
+      "auc_roc": [
+        0.9046,
+        0.0015
+      ],
+      "auc_pr": [
+        0.8847,
+        0.0104
+      ],
+      "recall_at_fpr1": [
+        0.6252,
+        0.0337
+      ]
+    },
+    "ppr": {
+      "auc_roc": [
+        0.8805,
+        0.0083
+      ],
+      "auc_pr": [
+        0.8286,
+        0.0303
+      ],
+      "recall_at_fpr1": [
+        0.3571,
+        0.1479
+      ]
+    },
+    "xgb": {
+      "auc_roc": [
+        0.8742,
+        0.0064
+      ],
+      "auc_pr": [
+        0.7593,
+        0.0088
+      ],
+      "recall_at_fpr1": [
+        0.2631,
+        0.0189
+      ]
+    },
+    "mlp": {
+      "auc_roc": [
+        0.8073,
+        0.0021
+      ],
+      "auc_pr": [
+        0.5975,
+        0.003
+      ],
+      "recall_at_fpr1": [
+        0.0836,
+        0.0029
+      ]
+    },
+    "appnp": {
+      "auc_roc": [
+        0.787,
+        0.0015
+      ],
+      "auc_pr": [
+        0.5998,
+        0.0048
+      ],
+      "recall_at_fpr1": [
+        0.0575,
+        0.0096
+      ]
+    },
+    "dcredit": {
+      "auc_roc": [
+        0.8073,
+        0.0021
+      ],
+      "auc_pr": [
+        0.5975,
+        0.003
+      ],
+      "recall_at_fpr1": [
+        0.0836,
+        0.0029
+      ]
+    },
+    "learned_gates": [
+      {
+        "alpha": 0.122,
+        "gamma_undirected": 0.328,
+        "gamma_out": 0.329,
+        "gamma_in": 0.343,
+        "beta": 1.0,
+        "w_credit": 0.016
+      },
+      {
+        "alpha": 0.122,
+        "gamma_undirected": 0.327,
+        "gamma_out": 0.327,
+        "gamma_in": 0.346,
+        "beta": 1.0,
+        "w_credit": 0.019
+      },
+      {
+        "alpha": 0.124,
+        "gamma_undirected": 0.34,
+        "gamma_out": 0.315,
+        "gamma_in": 0.345,
+        "beta": 1.0,
+        "w_credit": 0.038
+      }
+    ]
+  },
+  "0.5": {
+    "lp": {
+      "auc_roc": [
+        0.9166,
+        0.002
+      ],
+      "auc_pr": [
+        0.911,
+        0.0022
+      ],
+      "recall_at_fpr1": [
+        0.7339,
+        0.006
+      ]
+    },
+    "ppr": {
+      "auc_roc": [
+        0.9059,
+        0.0036
+      ],
+      "auc_pr": [
+        0.8975,
+        0.0061
+      ],
+      "recall_at_fpr1": [
+        0.6669,
+        0.0326
+      ]
+    },
+    "xgb": {
+      "auc_roc": [
+        0.9036,
+        0.0031
+      ],
+      "auc_pr": [
+        0.8067,
+        0.0016
+      ],
+      "recall_at_fpr1": [
+        0.2966,
+        0.0107
+      ]
+    },
+    "mlp": {
+      "auc_roc": [
+        0.8074,
+        0.0019
+      ],
+      "auc_pr": [
+        0.6028,
+        0.0041
+      ],
+      "recall_at_fpr1": [
+        0.0929,
+        0.0072
+      ]
+    },
+    "appnp": {
+      "auc_roc": [
+        0.7798,
+        0.0111
+      ],
+      "auc_pr": [
+        0.5677,
+        0.0454
+      ],
+      "recall_at_fpr1": [
+        0.0434,
+        0.0293
+      ]
+    },
+    "dcredit": {
+      "auc_roc": [
+        0.8074,
+        0.0019
+      ],
+      "auc_pr": [
+        0.6028,
+        0.0041
+      ],
+      "recall_at_fpr1": [
+        0.0929,
+        0.0072
+      ]
+    },
+    "learned_gates": [
+      {
+        "alpha": 0.115,
+        "gamma_undirected": 0.331,
+        "gamma_out": 0.34,
+        "gamma_in": 0.329,
+        "beta": 1.0,
+        "w_credit": -0.011
+      },
+      {
+        "alpha": 0.119,
+        "gamma_undirected": 0.333,
+        "gamma_out": 0.34,
+        "gamma_in": 0.327,
+        "beta": 1.0,
+        "w_credit": 0.011
+      },
+      {
+        "alpha": 0.12,
+        "gamma_undirected": 0.333,
+        "gamma_out": 0.338,
+        "gamma_in": 0.329,
+        "beta": 1.0,
+        "w_credit": 0.01
+      }
+    ]
+  }
+}

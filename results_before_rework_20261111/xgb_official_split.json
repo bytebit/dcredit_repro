@@ -1,0 +1,24 @@
+[
+  {
+    "variant": "full_166",
+    "n_features": 166,
+    "thr": 0.32422375679016113,
+    "val_macro_f1": 0.9596404519166477,
+    "test_macro_f1": 0.8331900836016898,
+    "auc_roc": 0.923075619815054,
+    "auc_pr_illicit": 0.7878735632238811,
+    "recall_at_fpr1": 0.7239150507848569,
+    "n_ranked_for_fpr1": 940
+  },
+  {
+    "variant": "local_only_94",
+    "n_features": 94,
+    "thr": 0.8736891746520996,
+    "val_macro_f1": 0.9720827108299692,
+    "test_macro_f1": 0.8776199979162158,
+    "auc_roc": 0.9094289870675549,
+    "auc_pr_illicit": 0.7786452522799499,
+    "recall_at_fpr1": 0.7109879963065558,
+    "n_ranked_for_fpr1": 926
+  }
+]

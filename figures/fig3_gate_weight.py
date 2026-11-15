@@ -69,6 +69,29 @@ ax.tick_params(axis='y', labelsize=6.2)
 ax.legend(fontsize=5.8, loc='upper left')
 ax.set_title('The gate learns the regime', fontsize=7.2, pad=3)
 
+# --- QA: every text inside the canvas, and no text-text overlap ------------
+fig.canvas.draw()
+ren = fig.canvas.get_renderer()
+w_px, h_px = fig.canvas.get_width_height()
+bboxes = [(t, t.get_window_extent(renderer=ren)) for t in ax.texts]
+problems = []
+for t, b in bboxes:
+    if b.x0 < 0 or b.y0 < 0 or b.x1 > w_px or b.y1 > h_px:
+        problems.append(('out-of-canvas', t.get_text()[:30]))
+for i in range(len(bboxes)):
+    for j in range(i + 1, len(bboxes)):
+        a, b = bboxes[i][1], bboxes[j][1]
+        ox = min(a.x1, b.x1) - max(a.x0, b.x0)
+        oy = min(a.y1, b.y1) - max(a.y0, b.y0)
+        if ox > 1.5 and oy > 1.5:
+            problems.append(('text overlap',
+                             bboxes[i][0].get_text()[:20] + ' <-> '
+                             + bboxes[j][0].get_text()[:20],
+                             round(ox, 1), round(oy, 1)))
+print('fig3 QA problems:', len(problems))
+for p in problems:
+    print('   ', p)
+
 fig.savefig(os.path.join(OUT, 'fig3_gate_weight.svg'), bbox_inches='tight')
 fig.savefig(os.path.join(OUT, 'fig3_gate_weight.pdf'), bbox_inches='tight')
 fig.savefig(os.path.join(OUT, 'fig3_gate_weight.png'), dpi=600,

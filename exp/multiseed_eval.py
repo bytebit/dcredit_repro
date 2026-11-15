@@ -70,6 +70,7 @@ def main():
     ap.add_argument("--epochs", type=int, default=250)
     ap.add_argument("--seed-base", type=int, default=700)
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--out-dir", default=OUT)
     args = ap.parse_args()
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
 
@@ -121,6 +122,9 @@ def main():
     for frac in [float(x) for x in args.fractions.split(",")]:
         rows = {k: [] for k in ("lp", "ppr", "xgb", "mlp", "appnp", "gate_fusion")}
         w_auc, w_rec, secs = [], [], []
+        audit = {"seed_nodes_used_for_scoring": 0,
+                 "validation_nodes_used_for_scoring": 0,
+                 "evaluation_nodes_exclude_validation": True}
         for trial in range(args.trials):
             t0 = time.time()
             rng = np.random.default_rng(args.seed_base + trial)
@@ -129,10 +133,20 @@ def main():
             seed_n = rng.choice(neg_cand, size=max(1, int(len(neg_cand) * frac)),
                                 replace=False)
             seed = np.concatenate([seed_p, seed_n])
-            hold = np.setdiff1d(np.arange(n), seed)
-            hold = hold[cand_mask[hold]]
-            y_hold = y_pos[hold]
             val_v = np.setdiff1d(val_nodes, seed)
+            # Strict isolation: the final evaluation set excludes both the
+            # training seeds and the validation nodes used to select the gate.
+            eval_mask = cand_mask.copy()
+            eval_mask[seed] = False
+            eval_mask[val_v] = False
+            hold = np.where(eval_mask)[0]
+            seed_overlap = int(np.intersect1d(seed, hold).size)
+            val_overlap = int(np.intersect1d(val_v, hold).size)
+            assert seed_overlap == 0, (frac, trial, "seed", seed_overlap)
+            assert val_overlap == 0, (frac, trial, "validation", val_overlap)
+            audit["seed_nodes_used_for_scoring"] += seed_overlap
+            audit["validation_nodes_used_for_scoring"] += val_overlap
+            y_hold = y_pos[hold]
             ytr = y_pos[seed]
 
             def metrics(sc):
@@ -261,8 +275,10 @@ def main():
         report[str(frac)]["gate_w_auc"] = w_auc
         report[str(frac)]["gate_w_recall"] = w_rec
         report[str(frac)]["seconds"] = secs
+        report[str(frac)]["evaluation_protocol"] = audit
 
-    out_path = os.path.join(OUT, f"multiseed_label{args.label}.json")
+    os.makedirs(args.out_dir, exist_ok=True)
+    out_path = os.path.join(args.out_dir, f"multiseed_label{args.label}.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump({"meta": {"label": args.label, "trials": args.trials,
                             "seed_base": args.seed_base,

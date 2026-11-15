@@ -19,7 +19,7 @@ RES = os.path.join(BASE, "results")
 OUT = os.path.join(BASE, "analysis", "statistics.md")
 
 METRICS = ("auc_roc", "auc_pr", "recall_at_fpr1")
-METHODS = ("lp", "ppr", "xgb", "mlp", "appnp", "gate_fusion")
+METHODS = ("lp", "ppr", "xgb", "mlp", "appnp", "gate_fusion", "graphsage")
 
 
 def ci95(values):
@@ -36,12 +36,18 @@ def fmt(values):
     return f"{mean:.3f} ± {half:.3f}", f"{sd:.3f}", n
 
 
-def eth_block(path, label, lines):
+def eth_block(path, label, lines, sage_path=None):
     d = json.load(io.open(path, encoding="utf-8"))
     meta = d["meta"]
-    lines.append(f"\n### ETH same-window, label={label} "
+    sage = None
+    if sage_path and os.path.exists(sage_path):
+        sage = json.load(io.open(sage_path, encoding="utf-8"))["results"]
+    lines.append(f"\n### ETH transductive all-time, label={label} "
                  f"(n={meta['trials']} trials, seed base {meta['seed_base']})\n")
     for frac, res in d["results"].items():
+        if sage is not None and frac in sage:
+            res = dict(res)
+            res["graphsage"] = sage[frac]["graphsage"]
         lines.append(f"\n**Seed fraction {frac}**\n")
         lines.append("| Method | AUC-ROC (95% CI) | AUC-PR (95% CI) | "
                      "Recall@FPR=1% (95% CI) |")
@@ -93,10 +99,13 @@ def main():
              "",
              "All intervals are Student-t intervals over independent seed draws. "
              "Within a trial every method sees the same seed set."]
-    for name, label in (("multiseed_label2.json", 2), ("multiseed_label1.json", 1)):
+    for name, label, sage_name in (
+            ("multiseed_label2.json", 2, "sage_label2.json"),
+            ("multiseed_label1.json", 1, "sage_label1.json")):
         p = os.path.join(RES, name)
         if os.path.exists(p):
-            eth_block(p, "Tornado (mixer)" if label == 2 else "Phishing", lines)
+            eth_block(p, "Tornado (mixer)" if label == 2 else "Phishing", lines,
+                      os.path.join(RES, sage_name))
     p = os.path.join(RES, "elliptic_t29_multiseed.json")
     if os.path.exists(p):
         elliptic_block(p, lines)

@@ -86,23 +86,28 @@ xgb_rec_sd = np.array([mean_ci(elliptic['xgb'], 'recall_at_fpr1')[1],
 def grouped(ax, lp, lp_sd, xgb, xgb_sd, ylabel, ymax):
     x = np.arange(len(regimes))
     w = 0.34
+    # Whiskers without caps: when a confidence interval is shorter than the cap
+    # width, the two caps and the stub between them read as a stray glyph.
+    err = {'elinewidth': 0.9, 'capsize': 0, 'ecolor': '#333333'}
     b1 = ax.bar(x - w / 2, lp, width=w, color=LP, edgecolor='black',
                 linewidth=0.6, label='LP (propagation)', yerr=lp_sd,
-                error_kw={'elinewidth': 0.8, 'capthick': 0.8, 'capsize': 2.2})
+                error_kw=err)
     b2 = ax.bar(x + w / 2, xgb, width=w, color=XGB, edgecolor='black',
                 linewidth=0.6, label='XGBoost (features)', yerr=xgb_sd,
-                error_kw={'elinewidth': 0.8, 'capthick': 0.8, 'capsize': 2.2})
+                error_kw=err)
     for i, v in enumerate(lp):
         if not np.isnan(v):
-            top = v + (0.0 if np.isnan(lp_sd[i]) else lp_sd[i]) + 0.014
+            top = v + (0.0 if np.isnan(lp_sd[i]) else lp_sd[i]) + 0.012
             ax.text(x[i] - w / 2, top, f'{v:.3f}'.rstrip('0'),
                     ha='center', va='bottom', fontsize=5.4)
     for i, v in enumerate(xgb):
         if np.isnan(v):
-            ax.text(x[i] + w / 2, 0.012, 'n/a†', ha='center', va='bottom',
-                    fontsize=5.4, color='#555555')
+            # No feature baseline exists here. The gap between the neighbouring
+            # bar and the right spine is narrower than the label, so the
+            # explanation lives in the caption instead of inside the axes.
+            continue
         else:
-            top = v + (0.0 if np.isnan(xgb_sd[i]) else xgb_sd[i]) + 0.014
+            top = v + (0.0 if np.isnan(xgb_sd[i]) else xgb_sd[i]) + 0.012
             ax.text(x[i] + w / 2, top, f'{v:.3f}'.rstrip('0'),
                     ha='center', va='bottom', fontsize=5.4)
     ax.set_xticks(x)
@@ -133,6 +138,30 @@ fig.text(0.5, 0.015,
          '(full-label XGBoost = 0.9231, §6.2). Bars: 10-trial means, 95% CI; '
          'cross-time LP is a single run.',
          ha='center', fontsize=5.4, color='#444444')
+
+# --- QA: every text inside the canvas, and no text-text overlap ------------
+fig.canvas.draw()
+ren = fig.canvas.get_renderer()
+w_px, h_px = fig.canvas.get_width_height()
+texts = [t for ax in (axa, axb) for t in ax.texts] + list(fig.texts)
+bboxes = [(t, t.get_window_extent(renderer=ren)) for t in texts]
+problems = []
+for t, b in bboxes:
+    if b.x0 < 0 or b.y0 < 0 or b.x1 > w_px or b.y1 > h_px:
+        problems.append(('out-of-canvas', t.get_text()[:30]))
+for i in range(len(bboxes)):
+    for j in range(i + 1, len(bboxes)):
+        a, b = bboxes[i][1], bboxes[j][1]
+        ox = min(a.x1, b.x1) - max(a.x0, b.x0)
+        oy = min(a.y1, b.y1) - max(a.y0, b.y0)
+        if ox > 1.5 and oy > 1.5:
+            problems.append(('text overlap',
+                             bboxes[i][0].get_text()[:20] + ' <-> '
+                             + bboxes[j][0].get_text()[:20],
+                             round(ox, 1), round(oy, 1)))
+print('fig1 QA problems:', len(problems))
+for p in problems:
+    print('   ', p)
 
 require_matplotlib_panel_alignment(
     fig,

@@ -1,0 +1,139 @@
+{
+  "ellip_t29_fusion": {
+    "0.1": {
+      "lp": {
+        "auc_roc": [
+          0.903,
+          0.003
+        ],
+        "recall_at_fpr1": [
+          0.4714,
+          0.0073
+        ]
+      },
+      "xgb": {
+        "auc_roc": [
+          0.9115,
+          0.0105
+        ],
+        "recall_at_fpr1": [
+          0.1627,
+          0.0679
+        ]
+      },
+      "gate_fusion": {
+        "auc_roc": [
+          0.9115,
+          0.0105
+        ],
+        "recall_at_fpr1": [
+          0.1627,
+          0.0679
+        ]
+      },
+      "learned_w": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "0.5": {
+      "lp": {
+        "auc_roc": [
+          0.964,
+          0.0022
+        ],
+        "recall_at_fpr1": [
+          0.6828,
+          0.0281
+        ]
+      },
+      "xgb": {
+        "auc_roc": [
+          0.9544,
+          0.0071
+        ],
+        "recall_at_fpr1": [
+          0.2101,
+          0.1302
+        ]
+      },
+      "gate_fusion": {
+        "auc_roc": [
+          0.9559,
+          0.0087
+        ],
+        "recall_at_fpr1": [
+          0.3232,
+          0.2853
+        ]
+      },
+      "learned_w": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  "direction_ablation": {
+    "undirected": {
+      "auc": 0.8979,
+      "rec@fpr1": 0.6122
+    },
+    "directed_out": {
+      "auc": 0.5898,
+      "rec@fpr1": 0.1048
+    },
+    "directed_in": {
+      "auc": 0.5067,
+      "rec@fpr1": 0.0708
+    }
+  },
+  "case_study": [
+    {
+      "account": "0xe99ae01180",
+      "credit": 0.003597,
+      "path_len": 2,
+      "path": [
+        "0xb422b94b",
+        "0xe99ae011"
+      ]
+    },
+    {
+      "account": "0xc345de3169",
+      "credit": 0.003597,
+      "path_len": 2,
+      "path": [
+        "0xb422b94b",
+        "0xc345de31"
+      ]
+    },
+    {
+      "account": "0x10a43d8842",
+      "credit": 0.003597,
+      "path_len": 2,
+      "path": [
+        "0xdef28916",
+        "0x10a43d88"
+      ]
+    }
+  ]
+}
